@@ -1,1 +1,1 @@
-web: python notify.py
+web: python3 notify.py
