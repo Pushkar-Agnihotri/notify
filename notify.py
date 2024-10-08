@@ -1,16 +1,18 @@
-import argparse
+from flask import Flask, request
 from email_adapter import EmailAdapter
 
-def main():
-    parser = argparse.ArgumentParser(description='Send email notifications from the command line.')
-    parser.add_argument('--to', required=True, help='Recipient email address')
-    parser.add_argument('--message', required=True, help='The message to send')
-    parser.add_argument('--subject', help='Email subject (default: "Notification")')
+app = Flask(__name__)
 
-    args = parser.parse_args()
-
+@app.route('/send', methods=['POST'])
+def send_notification():
+    data = request.get_json()
+    to_email = data.get('to')
+    message = data.get('message')
+    subject = data.get('subject')
     adapter = EmailAdapter()
-    adapter.send(args.message, to_email=args.to, subject=args.subject or "Notification")
+    adapter.send(message=message, to_email=to_email, subject=subject or "Notification")
+    return f"Email sent to {to_email} with message: {message}", 200
 
-if __name__ == "__main__":
-    main()
+if __name__ == '__main__':
+    # Ensure Flask listens on all available IPs and on port 5000
+    app.run(host='0.0.0.0', port=5000)
