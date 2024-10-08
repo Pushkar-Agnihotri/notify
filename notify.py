@@ -3,6 +3,10 @@ from email_adapter import EmailAdapter
 
 app = Flask(__name__)
 
+@app.route('/')
+def index():
+    return "Welcome to the Notification API. Use the /send endpoint to send notifications.", 200
+
 @app.route('/send', methods=['POST'])
 def send_notification():
     data = request.get_json()
